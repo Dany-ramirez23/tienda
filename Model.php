@@ -12,7 +12,7 @@ class Model
 
     function __construct()
     {
-        $server = 'db';
+        $server = 'localhost';
         $username = 'root';
         $password = '';
         $database = 'tienda_virtual';

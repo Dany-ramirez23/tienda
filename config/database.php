@@ -1,6 +1,6 @@
 <?php
 
-$server = 'db';
+$server = 'localhost';
 $username = 'root';
 $password = '';
 $database = 'tienda_virtual';
