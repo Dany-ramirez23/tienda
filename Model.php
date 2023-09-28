@@ -12,7 +12,7 @@ class Model
 
     function __construct()
     {
-        $server = 'localhost';
+        $server = 'db';
         $username = 'root';
         $password = '';
         $database = 'tienda_virtual';
@@ -23,6 +23,17 @@ class Model
             die('1Connection Failed: ' . $e->getMessage());
         }
     }
+
+    function checkConnection()
+    {
+        if ($this->db) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     function getCategorias()
     {
