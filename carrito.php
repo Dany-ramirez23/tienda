@@ -1,12 +1,11 @@
 <?php
 
-  session_start();
+session_start();
 
-  if (isset($_SESSION['user_id'])) {
-   
-  }else{
-    header("Location: login.php");
-  }
+if (isset($_SESSION['user_id'])) {
+} else {
+  header("Location: login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,8 +28,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">PEÑALOZA</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -51,8 +49,7 @@
 
           </ul>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" value="<?=$_SESSION['email'];?>" type="text" readonly
-              aria-label="Search">
+            <input class="form-control mr-sm-2" value="<?= $_SESSION['email']; ?>" type="text" readonly aria-label="Search">
             <a href="logout.php" class="btn btn-outline-success my-2 my-sm-0" type="button">Cerrar Sesión</a>
           </form>
         </div>
@@ -110,8 +107,7 @@
 
     </div>
     <div class="text-right">
-      <b style="padding-right:34%; font-size: 1.4rem;">Total productos: {{cantidadCarrito}}</b> <b
-        style="padding-right:15%; font-size: 2rem;">Total a pagar: ${{total}}</b>
+      <b style="padding-right:34%; font-size: 1.4rem;">Total productos: {{cantidadCarrito}}</b> <b style="padding-right:15%; font-size: 2rem;">Total a pagar: ${{total}}</b>
     </div>
     <br><br>
     <div class="container">
@@ -137,17 +133,16 @@
 
 
   <script>
-
     let app = new Vue({
       el: '#app',
       data: {
         productos: [],
         categorias: [],
         cantidadCarrito: 0,
-        id_usuario: "<?=$_SESSION['user_id']?>",
+        id_usuario: "<?= $_SESSION['user_id'] ?>",
         total: 0
       },
-      created: function () {
+      created: function() {
         this.getCategorias();
         this.getProductos();
         this.fcantidadCarrito();
@@ -163,7 +158,7 @@
                 servicio: "eliminarCarrito",
                 producto_id: producto.id
               },
-              success: function (respuesta) {
+              success: function(respuesta) {
                 app.getProductos();
                 app.fcantidadCarrito();
               }
@@ -198,7 +193,7 @@
               id_usuario: this.id_usuario,
 
             },
-            success: function (respuesta) {
+            success: function(respuesta) {
               app.cantidadCarrito = parseInt(respuesta);
             }
           });
@@ -212,7 +207,7 @@
               servicio: "getCarrito",
               id_usuario: this.id_usuario
             },
-            success: function (respuesta) {
+            success: function(respuesta) {
               respuesta = JSON.parse(respuesta);
               app.productos = respuesta;
               var total = 0;
@@ -230,7 +225,7 @@
             data: {
               servicio: "getCategorias",
             },
-            success: function (respuesta) {
+            success: function(respuesta) {
               respuesta = JSON.parse(respuesta);
               app.categorias = respuesta;
             }
@@ -238,8 +233,6 @@
         }
       }
     });
-
-
   </script>
 
 </body>

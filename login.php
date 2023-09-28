@@ -1,5 +1,5 @@
 <?php
-  session_start();
+session_start();
 
 if ($_SESSION) {
   header('index.php');
@@ -7,29 +7,27 @@ if ($_SESSION) {
 require 'database.php';
 require 'model.php';
 
-if($_POST){
+if ($_POST) {
   $password = $_POST['password'];
   $email = $_POST['email'];
   $modelo = new Model();
-  if($password && $email){
-    $usuario = $modelo->login($password,$email);
+  if ($password && $email) {
+    $usuario = $modelo->login($password, $email);
     $id_usuario = $usuario['id'];
-    
-    if($id_usuario){
+
+    if ($id_usuario) {
       $_SESSION['user_id'] = $id_usuario;
       $_SESSION['email'] = $email;
       $mensaje = "Datos correctos";
-      echo "hola";
-      if(intval($usuario['tipo_usuario']) == 0){
-        header("Location: index_admin.php");
+      if (intval($usuario['tipo_usuario']) == 0) {
+        echo "<script> window.location.href = 'index_admin.php'; </script>";
+      } else {
+        echo "<script> window.location.href = 'index.php'; </script>";
       }
-      else{
-        header("Location: index.php");
-      }
-    }else{  
+    } else {
       $mensaje = "Datos inválidos";
     }
-  }else{
+  } else {
     echo "Ingresa los datos";
   }
 }
@@ -65,18 +63,18 @@ if($_POST){
   <h1>Inicia Sesión</h1>
   <span>o <a href="signup.php"> <input type="submit" value="Registrate"></a></span>
 
-  <?php if(!empty($mensaje)): ?>
-  <p> <?= $mensaje ?></p>
+  <?php if (!empty($mensaje)) : ?>
+    <p> <?= $mensaje ?></p>
   <?php endif; ?>
   <form action="login.php" method="POST">
-    
+
     <input name="email" type="email" placeholder="Escribe tu correo">
     <input name="password" type="password" placeholder="Escribe tu contraseña">
     <input type="submit" value="Entrar">
 
 
-    <?php if(!empty($mensaje)): ?>
-    <p> <?= $mensaje ?></p>
+    <?php if (!empty($mensaje)) : ?>
+      <p> <?= $mensaje ?></p>
     <?php endif; ?>
 
 
