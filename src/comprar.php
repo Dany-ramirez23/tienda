@@ -4,7 +4,13 @@ session_start();
 
 $db = new Database();
 
-$totales = $db->getTotales();
+if (!isset($_GET['id'])) {
+    header('Location: productos.php');
+}
+
+$id = $_GET['id'];
+
+$producto = $db->getProducto($id);
 
 
 
@@ -17,7 +23,7 @@ $totales = $db->getTotales();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Productos</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -84,8 +90,72 @@ $totales = $db->getTotales();
     </nav>
 
     <div class="container p-8  gap-8 w-full">
+        <div class="w-full flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" src="<?= $producto['ruta_imagen'] ?>" alt="">
+            <div class="flex flex flex-col justify-between p-4 leading-normal">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <?= $producto['nombre'] ?>
+                </h5>
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    $<?= $producto['precio'] ?>
+                </h5>
+                <i class="mb-3 font-normal  text-gray-700 dark:text-gray-400">
+                    <?= $producto['categoria'] ?>
+                </i>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    <?= $producto['especificaciones'] ?>
+                </p>
 
+                <? if ($producto['existencias'] > 0) : ?>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        <?= $producto['existencias'] ?> disponibles
+                    </p>
+                <? else : ?>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        No hay existencias
+                    </p>
+                <? endif; ?>
+
+                <div class="mb-3">
+                    <label for="cantidad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cantidad</label>
+                    <select id="cantidad" name="cantidad" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <?php for ($i = 1; $i <= min($producto['existencias'], 10); $i++) : ?>
+                            <option value="<?= $i ?>"><?= $i ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <? if ($producto['existencias'] > 0) : ?>
+                    <button onclick="agregarAlCarrito()" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Comprar ahora
+                        <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                        </svg>
+                    </button>
+                <? endif; ?>
+
+
+            </div>
+
+        </div>
     </div>
+
+    <script>
+        function agregarAlCarrito() {
+            let cantidad = document.getElementById('cantidad').value;
+            let id = <?= $id ?>;
+
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let producto = {
+                id: id,
+                cantidad: cantidad
+            }
+            carrito.push(producto);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+
+            window.location.href = './carrito.php';
+        }
+    </script>
 
 </body>
 

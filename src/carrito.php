@@ -17,7 +17,7 @@ $totales = $db->getTotales();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Mi Carrito</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -84,9 +84,74 @@ $totales = $db->getTotales();
     </nav>
 
     <div class="container p-8  gap-8 w-full">
+        <h2 class="relative group font-bold text-3xl mb-4">Mi Carrito</h2>
+        <ul id="shopping-cart-list" class="divide-y max-w-md divide-gray-200 dark:divide-gray-700">
 
+        </ul>
+        <div id="total" class="flex max-w-md font-bold flex justify-end text-2xl">
+            
+        </div>
+
+        <div class="flex justify-end max-w-md mt-6">
+            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                Comprar
+            </button>
+        </div>
     </div>
 
 </body>
+
+<script>
+    window.onload = function() {
+
+        let carrito = JSON.parse(localStorage.getItem('carrito'));
+
+
+        fetch('./cargar_carrito.php', {
+            method: 'POST',
+            body: JSON.stringify({
+                carrito
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((response) => response.json().then((data) => {
+
+            const productos = data.productos;
+            let body = "";
+            for(let producto of productos){
+                body += `
+                <li class="pb-3 sm:pb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <img class="w-8 h-8 rounded-full" src="${producto.ruta_imagen}" alt="Neil image">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            ${producto.nombre}
+                            </p>
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                            ${producto.cantidad} ${producto.cantidad == 1? 'Unidad': 'Unidades'} 
+                            </p>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                ${producto.cantidad} x $${producto.precio} = $${producto.total}
+                            </div>
+                            <div class="text-sm flex justify-end font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                Quitar
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                `;
+            }
+            
+            document.querySelector('#shopping-cart-list').innerHTML = body;
+            document.querySelector('#total').innerHTML = `Total: $${data.total}`;
+        }))
+
+    }
+</script>
 
 </html>

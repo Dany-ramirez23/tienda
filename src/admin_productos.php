@@ -61,7 +61,7 @@ $productos = $db->getProductos();
 
     <div class="container p-8 gap-8 w-full">
         <h2 class="relative group font-bold text-3xl mb-4">Productos</h2>
-        <a href="./admin_crear_categoria.php" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+        <a href="./admin_crear_producto.php" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
             Crear producto
         </a>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

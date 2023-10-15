@@ -129,6 +129,10 @@ class Database
         return $this->query("INSERT INTO categorias(nombre) values ('$nombre')");
     }
 
+    function crearProducto($nombre, $precio, $existencias, $id_categoria, $ruta_imagen, $especificaciones){
+        return $this->query("INSERT INTO productos(nombre, precio, existencias, id_categoria, ruta_imagen, especificaciones) values ('$nombre', $precio, $existencias, $id_categoria, '$ruta_imagen', '$especificaciones')");
+    }
+
     function deleteCategoria($id)
     {
         return $this->query("DELETE from categorias where id = $id");
@@ -139,6 +143,33 @@ class Database
         return $this->query("DELETE from productos where id = $id");
     }
 
+    function editarProducto($id, $nombre, $precio, $existencias, $id_categoria, $imagen, $especificaciones)
+    {
+        return $this->query("UPDATE productos set nombre = '$nombre', precio = $precio, existencias = $existencias, id_categoria = $id_categoria, ruta_imagen = '$imagen', especificaciones = '$especificaciones' where id = $id");
+    }
+
+    function obtenerCarrito($carrito){
+        
+        $resultado = [];
+        $total = 0;
+
+        foreach ($carrito as $item) {
+            
+            $producto = $this->getProducto($item['id']);
+
+            $producto['cantidad'] = intval($item['cantidad']);
+            $producto['total'] = $producto['cantidad'] * $producto['precio'];
+            $total += $producto['total'];
+
+            array_push($resultado, $producto);
+        }
+
+
+        return [
+            "productos" => $resultado,
+            "total" => $total
+        ];  
+    }
 
     //Reportes
 

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST['id'];
 
         $db->actualizarCategoria($id, $nombre);
-        header('Location: admin_categorias.php');
+        header("Location: admin_editar_categoria.php?id=$id");
     }
 }
 $categoria = null;

@@ -4,30 +4,21 @@ session_start();
 
 $db = new Database();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$categorias = $db->getCategorias();
 
-    $id = $_POST['id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST['nombre'];
     $precio = $_POST['precio'];
     $existencias = $_POST['existencias'];
     $id_categoria = $_POST['id_categoria'];
-    $imagen = $_POST['imagen'];
+    $ruta_imagen = $_POST['ruta_imagen'];
     $especificaciones = $_POST['especificaciones'];
 
-    $db->editarProducto($id, $nombre, $precio, $existencias, $id_categoria, $imagen, $especificaciones);
-    header("Location: ./admin_editar_producto.php?id=$id");
-}
-$producto = null;
-$categorias = $db->getCategorias();
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $db->crearProducto($nombre, $precio, $existencias, $id_categoria, $ruta_imagen, $especificaciones);
 
-    if (isset($_GET['id'])) {
-
-        $id = $_GET['id'];
-        $producto = $db->getProducto($id);
-        
-    }
+    header("Location: ./admin_productos.php");
 }
+
 
 ?>
 
@@ -37,12 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Editar producto</title>
+    <title>Crear Producto</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen">
-    <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
+<nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="https://flowbite.com/" class="flex items-center">
                 <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
@@ -83,24 +74,25 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     </nav>
 
     <div class="container p-8 gap-8 w-full">
-        <h2 class="relative group font-bold text-3xl mb-4">Editar Producto</h2>
+        <h2 class="relative group font-bold text-3xl mb-4">Crear Producto</h2>
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
 
-            <form action="./admin_editar_producto.php" method="POST">
+            <form action="./admin_crear_producto.php" method="POST">
+               
                 <div class="mb-6">
                     <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" value="<?= $producto['nombre'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese nombre del producto" required>
+                    <input type="text" name="nombre" id="nombre"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese nombre del producto" required>
                 </div>
 
                 <div class="mb-6">
                     <label for="precio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-                    <input type="number" name="precio" id="precio" value="<?= $producto['precio'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese precio del producto" required>
+                    <input type="number" name="precio" id="precio"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese precio del producto" required>
                 </div>
 
                 <div class="mb-6">
                     <label for="existencias" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Existencias</label>
-                    <input type="number" name="existencias" id="existencias" value="<?= $producto['existencias'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese existencias del producto" required>
+                    <input type="number" name="existencias" id="existencias"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese existencias del producto" required>
                 </div>
 
 
@@ -108,34 +100,26 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                     <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selecciona una categoría</label>
                     <select  id="categoria" name="id_categoria" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <?php foreach ($categorias as $categoria) : ?>
-                            <option <?= $producto['id_categoria'] == $categoria['id'] ? 'selected' : '' ?> value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
+                            <option  value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="mb-6">
                     <label for="imagen" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">URL de la imagen</label>
-                    <input type="text" name="imagen" id="imagen" value="<?= $producto['ruta_imagen'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese URL de la imagen del producto" required>
+                    <input type="text" name="ruta_imagen" id="imagen" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ingrese URL de la imagen del producto" required>
                 </div>
 
-                <img src="<?= $producto['ruta_imagen'] ?>" class="w-20 my-3">
-
+            
                 
 
                 <label for="especificaciones" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Especificaciones</label>
-                <textarea id="especificaciones" name="especificaciones" rows="4" class="mb-3 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Especificaciones..."  ><?= $producto['especificaciones'] ?></textarea>
+                <textarea id="especificaciones" name="especificaciones" rows="4" class="mb-3 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Especificaciones..."  ></textarea>
                 <div class="flex gap-4">
                     <button type="sumbit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Actualizar
+                        Crear
                     </button>
                 </div>
-                <input type="hidden" name="id" value="<?= $producto['id'] ?>">
-            </form>
-            <form method="POST" action="./admin_eliminar_producto.php" class="mt-4">
-                <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                    Eliminar
-                </button>
-                <input type="hidden" name="id" value="<?= $producto['id'] ?>">
             </form>
 
 
