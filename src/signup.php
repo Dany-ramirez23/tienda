@@ -2,10 +2,10 @@
 require './database.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if (isset($_POST['email'], $_POST['nombre_completo'], $_POST['password'])) {
+    if (isset($_POST['email'], $_POST['nombre'], $_POST['password'])) {
 
         $email = $_POST['email'];
-        $nombre_completo = $_POST['nombre_completo'];
+        $nombre_completo = $_POST['nombre'];
         $password = $_POST['password'];
 
         $db = new Database();
@@ -32,30 +32,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-[#A58F77] min-h-screen flex items-center justify-center">
+<body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen flex items-center justify-center">
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h1 class="text-2xl font-semibold mb-4">Registro de usuario</h1>
 
-        <form action="signup.php" method="POST">
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-600">Email:</label>
-                <input type="email" name="email" required class="mt-1 p-2 w-full border rounded-md">
+    <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <form class="space-y-6" method="POST" action="./signup.php">
+            <h5 class="text-xl font-medium text-gray-900 dark:text-white">Registro de usuario</h5>
+            <div>
+                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre completo</label>
+                <input type="text" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Juan Pérez" required>
+            </div>
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="nombre@compania.com" required>
+            </div>
+            <div>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-600">Nombre completo:</label>
-                <input type="text" name="nombre_completo" required class="mt-1 p-2 w-full border rounded-md">
-            </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-600">Contraseña:</label>
-                <input type="password" name="password" required class="mt-1 p-2 w-full border rounded-md">
+            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Registrarme
+            </button>
+            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+                ¿Ya tienes cuenta? <a href="./login.php" class="text-blue-700 hover:underline dark:text-blue-500">
+                    Iniciar sesión
+                </a>
             </div>
-
-            <button type="submit" class="w-full p-2 text-white bg-[#6C513B] rounded-md hover:bg-[#5A402D]">Registrar</button>
         </form>
     </div>
+
 
 </body>
 

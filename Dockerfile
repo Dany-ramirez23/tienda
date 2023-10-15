@@ -1,7 +1,7 @@
 FROM php:8.2.4-apache
 
 # Instalar extensiones
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo_mysql
 
 # Habilitar mod_rewrite para Apache
 RUN a2enmod rewrite

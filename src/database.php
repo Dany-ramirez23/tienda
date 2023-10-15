@@ -89,12 +89,12 @@ class Database
         return $this->registro("SELECT *,(SELECT categorias.nombre from categorias where categorias.id = productos.id_categoria) categoria from productos where id = $id");
     }
 
-    function getProductos($campo, $valor)
+    function getProductos($campo = null, $valor = null)
     {
         if ($campo && $valor) {
             return $this->arreglo("SELECT * from productos where $campo LIKE '%$valor%'");
         } else {
-            return $this->arreglo("SELECT * from productos");
+            return $this->arreglo("SELECT productos.*, categorias.nombre as categoria from productos inner join categorias on categorias.id = productos.id_categoria");
         }
     }
 
@@ -104,6 +104,48 @@ class Database
         return $this->arreglo("SELECT * from productos where id_categoria = $id_categoria");
     }
 
+    function getVentasSemanal()
+    {
+        return $this->arreglo("SELECT DATE_FORMAT(fecha,'%d/%m/%Y') fecha, sum(total) total from tickets where fecha >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) group by fecha");
+    }
+
+    function getCategoriaById($id)
+    {
+        return $this->registro("SELECT * from categorias where id = $id");
+    }
+
+    function actualizarCategoria($id, $nombre)
+    {
+        return $this->query("UPDATE categorias set nombre = '$nombre' where id = $id");
+    }
+
+    function eliminarCategoria($id)
+    {
+        return $this->query("DELETE from categorias where id = $id");
+    }
+
+    function crearCategoria($nombre)
+    {
+        return $this->query("INSERT INTO categorias(nombre) values ('$nombre')");
+    }
+
+    function deleteCategoria($id)
+    {
+        return $this->query("DELETE from categorias where id = $id");
+    }
+
+    function deleteProducto($id)
+    {
+        return $this->query("DELETE from productos where id = $id");
+    }
+
+
+    //Reportes
+
+    function getTotales()
+    {
+        return $this->registro("SELECT (SELECT COUNT(*) from usuarios) usuarios, (SELECT COUNT(*) from productos) productos, (SELECT COUNT(*) from categorias) categorias, (SELECT COUNT(*) from tickets) tickets, (SELECT sum(total) from tickets) ventas_totales");
+    }
 
 
 
