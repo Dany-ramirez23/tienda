@@ -25,9 +25,11 @@ $totales = $db->getTotales();
 
     <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="https://flowbite.com/" class="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+            <a href="./index.php" class="flex items-center">
+                <img src="./assets/logo.jpeg" class="h-8 mr-3" alt="logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                    Artesanías de barro Sánchez
+                </span>
             </a>
             <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
@@ -44,16 +46,6 @@ $totales = $db->getTotales();
                         </a>
                     </li>
 
-                    <li>
-                        <a href="./productos.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Productos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./categorias.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Categorías
-                        </a>
-                    </li>
                     <li>
                         <a href="./carrito.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                             <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 902.86 902.86" xml:space="preserve">
@@ -89,12 +81,12 @@ $totales = $db->getTotales();
 
         </ul>
         <div id="total" class="flex max-w-md font-bold flex justify-end text-2xl">
-            
+
         </div>
 
-        <div class="flex justify-end max-w-md mt-6">
-            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                Comprar
+        <div class="flex justify-end max-w-md mt-6" id="button">
+            <button onclick="finalizarCompra()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                Finalizar compra
             </button>
         </div>
     </div>
@@ -102,9 +94,46 @@ $totales = $db->getTotales();
 </body>
 
 <script>
+    function quitar(index) {
+        let carrito = JSON.parse(localStorage.getItem('carrito'));
+
+        carrito.splice(index, 1);
+
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+
+        window.location.reload();
+    }
+
+    function finalizarCompra() {
+        let carrito = JSON.parse(localStorage.getItem('carrito'));
+
+        fetch('./finalizar_compra.php', {
+            method: 'POST',
+            body: JSON.stringify({
+                carrito
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json().then(data => {
+            const {
+                ticket_id = {}
+            } = data;
+            const {
+                id = null
+            } = ticket_id;
+            console.log("id", id);
+            if (id) {
+                localStorage.removeItem('carrito');
+                const link = `./ticket.php?id=${id}`;
+                window.location.href = link;
+            }
+        }))
+    }
+
     window.onload = function() {
 
-        let carrito = JSON.parse(localStorage.getItem('carrito'));
+        let carrito = JSON.parse(localStorage.getItem('carrito')) ?? [];
 
 
         fetch('./cargar_carrito.php', {
@@ -119,26 +148,37 @@ $totales = $db->getTotales();
 
             const productos = data.productos;
             let body = "";
-            for(let producto of productos){
+
+            if (productos.length == 0) {
+                body += `<div class="flex justify-center items-center" style="height: 400px">
+                    <h1 class="text-2xl font-bold text-center">No hay productos en el carrito</h1>
+                </div>`
+
+                document.querySelector("#button").style.display = "none";
+            } else {
+                document.querySelector('#total').innerHTML = `Total: $${data.total}`;
+            }
+
+            for (let index in productos) {
                 body += `
                 <li class="pb-3 sm:pb-4">
                     <div class="flex items-center space-x-4">
                         <div class="flex-shrink-0">
-                            <img class="w-8 h-8 rounded-full" src="${producto.ruta_imagen}" alt="Neil image">
+                            <img class="w-8 h-8 rounded-full" src="${productos[index].ruta_imagen}" alt="Neil image">
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                            ${producto.nombre}
+                            ${productos[index].nombre}
                             </p>
                             <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                            ${producto.cantidad} ${producto.cantidad == 1? 'Unidad': 'Unidades'} 
+                            ${productos[index].cantidad} ${productos[index].cantidad == 1? 'Unidad': 'Unidades'} 
                             </p>
                         </div>
                         <div class="flex flex-col gap-1">
                             <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                ${producto.cantidad} x $${producto.precio} = $${producto.total}
+                                ${productos[index].cantidad} x $${productos[index].precio} = $${productos[index].total}
                             </div>
-                            <div class="text-sm flex justify-end font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                            <div onclick="quitar(${index})" class="text-sm flex justify-end font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                                 Quitar
                             </div>
                         </div>
@@ -146,9 +186,8 @@ $totales = $db->getTotales();
                 </li>
                 `;
             }
-            
+
             document.querySelector('#shopping-cart-list').innerHTML = body;
-            document.querySelector('#total').innerHTML = `Total: $${data.total}`;
         }))
 
     }

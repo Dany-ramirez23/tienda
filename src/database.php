@@ -99,6 +99,8 @@ class Database
     }
 
 
+
+
     function getProductosByCategoria($id_categoria)
     {
         return $this->arreglo("SELECT * from productos where id_categoria = $id_categoria");
@@ -106,7 +108,7 @@ class Database
 
     function getVentasSemanal()
     {
-        return $this->arreglo("SELECT DATE_FORMAT(fecha,'%d/%m/%Y') fecha, sum(total) total from tickets where fecha >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) group by fecha");
+        return $this->arreglo("SELECT DATE_FORMAT(fecha,'%d/%m/%Y') fecha_2, sum(total) total from tickets where fecha >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) group by fecha_2");
     }
 
     function getCategoriaById($id)
@@ -129,7 +131,8 @@ class Database
         return $this->query("INSERT INTO categorias(nombre) values ('$nombre')");
     }
 
-    function crearProducto($nombre, $precio, $existencias, $id_categoria, $ruta_imagen, $especificaciones){
+    function crearProducto($nombre, $precio, $existencias, $id_categoria, $ruta_imagen, $especificaciones)
+    {
         return $this->query("INSERT INTO productos(nombre, precio, existencias, id_categoria, ruta_imagen, especificaciones) values ('$nombre', $precio, $existencias, $id_categoria, '$ruta_imagen', '$especificaciones')");
     }
 
@@ -148,13 +151,14 @@ class Database
         return $this->query("UPDATE productos set nombre = '$nombre', precio = $precio, existencias = $existencias, id_categoria = $id_categoria, ruta_imagen = '$imagen', especificaciones = '$especificaciones' where id = $id");
     }
 
-    function obtenerCarrito($carrito){
-        
+    function obtenerCarrito($carrito)
+    {
+
         $resultado = [];
         $total = 0;
 
         foreach ($carrito as $item) {
-            
+
             $producto = $this->getProducto($item['id']);
 
             $producto['cantidad'] = intval($item['cantidad']);
@@ -168,7 +172,47 @@ class Database
         return [
             "productos" => $resultado,
             "total" => $total
-        ];  
+        ];
+    }
+
+    function comprarCarrito($carrito, $user_id)
+    {
+        $data = $this->obtenerCarrito($carrito);
+        $total = $data['total'];
+
+        $this->query("INSERT INTO tickets(id_usuario, total) values ($user_id, $total)");
+        $ticketId = $this->lastId();
+
+        foreach ($data['productos'] as $producto) {
+            $this->query("INSERT INTO productos_ticket(id_ticket, id_producto, cantidad, precio) values ($ticketId[id], $producto[id], $producto[cantidad], $producto[precio])");
+        }
+        return [
+            "ticket_id" => $ticketId,
+        ];
+    }
+
+    function getTicket($id)
+    {
+        return $this->registro("SELECT tickets.*, usuarios.nombre as nombre_usuario from tickets inner join usuarios on usuarios.id = tickets.id_usuario where tickets.id = $id");
+    }
+
+    function getProductosPorCategoria($id_categoria)
+    {
+        return $this->arreglo("SELECT * from productos where id_categoria = $id_categoria");
+    }
+
+    function categoriasConProductos()
+    {
+        $categorias = $this->arreglo("SELECT * from categorias");
+        $categoriasConProductos = [];
+
+        foreach ($categorias as $categoria) {
+            $productos = $this->getProductosByCategoria($categoria['id']);
+            if (sizeof($productos) > 0) {
+                array_push($categoriasConProductos, $categoria);
+            }
+        }
+        return $categoriasConProductos;
     }
 
     //Reportes
@@ -179,8 +223,10 @@ class Database
     }
 
 
-
-    //Las funciones de abajo no se tienen que tocar
+    function lastId()
+    {
+        return $this->registro("SELECT LAST_INSERT_ID() id");
+    }
 
 
 

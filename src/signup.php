@@ -37,7 +37,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form class="space-y-6" method="POST" action="./signup.php">
+
+            <div class="flex justify-center flex-col items-center">
+                <h2 class="font-bold text-2xl text-center mb-2">
+                    Artesanías de barro Sánchez
+                </h2>
+                <img src="./assets/logo.jpeg" class="h-36" alt="Flowbite Logo" />
+            </div>
             <h5 class="text-xl font-medium text-gray-900 dark:text-white">Registro de usuario</h5>
+
+
+
             <div>
                 <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre completo</label>
                 <input type="text" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Juan Pérez" required>

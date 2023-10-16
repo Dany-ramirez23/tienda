@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require './database.php';
 
 $db = new Database();
@@ -19,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $carrito = $json_data['carrito'];
 
-        $carrito = $db->obtenerCarrito($carrito);
+        $respuesta = $db->comprarCarrito($carrito, $_SESSION['user_id']);
 
-        echo json_encode($carrito);
+        echo json_encode($respuesta);
     }
 }

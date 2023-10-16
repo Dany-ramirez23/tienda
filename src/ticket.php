@@ -1,21 +1,12 @@
-<?php
+<?
+
 require './database.php';
-session_start();
 
 $db = new Database();
 
-$productos = $db->getProductos();
+$id = $_GET['id'];
 
-$categoriasConProductos = $db->categoriasConProductos();
-
-$categorias = $db->getCategorias();
-
-$id_categoria = null;
-
-if (isset($_GET['id_categoria'])) {
-    $id_categoria = $_GET['id_categoria'];
-    $productos = $db->getProductosPorCategoria($id_categoria);
-}
+$ticket = $db->getTicket($id);
 
 ?>
 
@@ -26,7 +17,7 @@ if (isset($_GET['id_categoria'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Ticket</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -54,7 +45,6 @@ if (isset($_GET['id_categoria'])) {
                             Inicio
                         </a>
                     </li>
-
 
                     <li>
                         <a href="./carrito.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
@@ -86,70 +76,24 @@ if (isset($_GET['id_categoria'])) {
     </nav>
 
     <div class="container p-8  gap-8 w-full">
+        <div class="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+                ¡Compra finalizada!
+            </h5>
+            <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">
+                Ticket #<?= $ticket['id'] ?>
+            </p>
+            <div class="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                <a href="./index.php" class="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 text-white rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
 
-        <div class="max-w-md mb-4">
-            <label for="categorias" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
-            <select onchange="handleOnChange()" id="categorias" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option <?= !isset($id_categoria) ? 'selected' : '' ?> value="-1">Todas las categorías</option>
-
-                <?php foreach ($categorias as $categoria) { ?>
-                    <option <?= isset($id_categoria) && $id_categoria == $categoria['id'] ? 'selected' : '' ?> value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
-                <?php } ?>
-            </select>
-
-        </div>
-
-        <?php if (sizeof($productos) == 0) { ?>
-            <div class="w-full p-4 h-60 flex items-center justify-center text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
-                    No hay productos
-                </h5>
-            </div>
-        <?php } ?>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-
-            <?php foreach ($productos as $producto) { ?>
-
-
-
-                <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <img class="p-8 rounded-t-lg" src="<?= $producto['ruta_imagen'] ?>" alt="product image" />
-                    </a>
-                    <div class="px-5 pb-5">
-                        <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                            <?= $producto['nombre'] ?>
-                        </h5>
-                        <h6>
-                            <?= $producto['categoria'] ?>
-                        </h6>
-
-                        <div class="flex items-center justify-between">
-                            <span class="text-3xl font-bold text-gray-900 dark:text-white">
-                                $<?= $producto['precio'] ?>
-                            </span>
-                            <a href="./comprar.php?id=<?= $producto['id'] ?>" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar al carrito</a>
-                        </div>
+                    <div class="text-left">
+                        <div class="-mt-1 font-sans text-sm font-semibold">Volver a comprar</div>
                     </div>
-                </div>
+                </a>
 
-            <?php } ?>
-
-
+            </div>
         </div>
     </div>
-
-    <script>
-        function handleOnChange() {
-            const id_categoria = document.getElementById('categorias').value;
-            if (id_categoria == -1) {
-                window.location.href = `./index.php`;
-            }
-            window.location.href = `./index.php?id_categoria=${id_categoria}`;
-        }
-    </script>
 
 </body>
 

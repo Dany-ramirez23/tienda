@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         $id = $_GET['id'];
         $producto = $db->getProducto($id);
-        
     }
 }
 
@@ -44,9 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen">
     <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="https://flowbite.com/" class="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+            <a href="./index.php" class="flex items-center">
+                <img src="./assets/logo.jpeg" class="h-8 mr-3" alt="logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                    Artesanías de barro Sánchez
+                </span>
             </a>
             <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
@@ -106,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
                 <div class="mb-6">
                     <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selecciona una categoría</label>
-                    <select  id="categoria" name="id_categoria" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <select id="categoria" name="id_categoria" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <?php foreach ($categorias as $categoria) : ?>
                             <option <?= $producto['id_categoria'] == $categoria['id'] ? 'selected' : '' ?> value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
                         <?php endforeach; ?>
@@ -120,10 +121,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
                 <img src="<?= $producto['ruta_imagen'] ?>" class="w-20 my-3">
 
-                
+
 
                 <label for="especificaciones" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Especificaciones</label>
-                <textarea id="especificaciones" name="especificaciones" rows="4" class="mb-3 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Especificaciones..."  ><?= $producto['especificaciones'] ?></textarea>
+                <textarea id="especificaciones" name="especificaciones" rows="4" class="mb-3 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Especificaciones..."><?= $producto['especificaciones'] ?></textarea>
                 <div class="flex gap-4">
                     <button type="sumbit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         Actualizar

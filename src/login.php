@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($user) {
             session_start();
-            $_SESSION['user'] = $user;
+            $_SESSION['user_id'] = $user['id'];
             if ($user['tipo_usuario'] == 1) {
                 header('Location: index.php');
             } else {
@@ -41,6 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form class="space-y-6" method="POST" action="./login.php">
+
+            <div class="flex justify-center flex-col items-center">
+                <h2 class="font-bold text-2xl text-center mb-2">
+                    Artesanías de barro Sánchez
+                </h2>
+                <img src="./assets/logo.jpeg" class="h-36" alt="Flowbite Logo" />
+            </div>
             <h5 class="text-xl font-medium text-gray-900 dark:text-white">Inicio de sesión</h5>
             <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>

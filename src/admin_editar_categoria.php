@@ -40,9 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen">
     <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="https://flowbite.com/" class="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+            <a href="./index.php" class="flex items-center">
+                <img src="./assets/logo.jpeg" class="h-8 mr-3" alt="logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                    Artesanías de barro Sánchez
+                </span>
             </a>
             <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
