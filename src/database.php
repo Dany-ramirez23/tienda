@@ -198,7 +198,7 @@ class Database
 
     function getProductosPorCategoria($id_categoria)
     {
-        return $this->arreglo("SELECT * from productos where id_categoria = $id_categoria");
+        return $this->arreglo("SELECT productos.*, categorias.nombre as categoria from productos inner join categorias on categorias.id = productos.id_categoria where id_categoria = $id_categoria");
     }
 
     function categoriasConProductos()

@@ -6,7 +6,7 @@ $db = new Database();
 
 $productos = $db->getProductos();
 
-$categoriasConProductos = $db->categoriasConProductos();
+
 
 $categorias = $db->getCategorias();
 
@@ -146,7 +146,8 @@ if (isset($_GET['id_categoria'])) {
             const id_categoria = document.getElementById('categorias').value;
             if (id_categoria == -1) {
                 window.location.href = `./index.php`;
-            }
+                return
+            };
             window.location.href = `./index.php?id_categoria=${id_categoria}`;
         }
     </script>
